@@ -1,53 +1,48 @@
-# Laporan Proyek Machine Learning - Nama Anda
+# Laporan Proyek Machine Learning - Nico Siahaan
 
 ## Domain Proyek
 
-Pada bagian ini, kamu perlu menuliskan latar belakang yang relevan dengan proyek yang diangkat.
-
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Jelaskan mengapa dan bagaimana masalah tersebut harus diselesaikan
-- Menyertakan hasil riset terkait atau referensi. Referensi yang diberikan harus berasal dari sumber yang kredibel dan author yang jelas.
-  
-  Format Referensi: [Judul Referensi](https://scholar.google.com/) 
+Proyek ini merupakan proyek Medical Analysis Cost. Proyek ini dibuat untuk memprediksi biaya pengobatan/charges yang diperlukan untuk berobat ke rumah sakit. Hal ini menjadi penting karena sebagian masyarakat takut akan berobat ke rumah sakit dikarenakan biayanya yang mahal [Survei: Takut dan Mahal Jadi Alasan Utama Orang Enggan ke Dokter](https://health.detik.com/berita-detikhealth/d-3205565/survei-takut-dan-mahal-jadi-alasan-utama-orang-enggan-ke-dokter). 
+Hal ini juga pernah di teliti oleh PALMY RAWINDA MELIALA pada [Perbandingan Algoritma Machine Learning Untuk Survivabilitas Dan Biaya Pengobatan Pasien Kanker Paru-Paru Di Taiwan](https://dspace.uii.ac.id/handle/123456789/37617) yang mana mereka menggunakan metode decision tree dalam membuat proyek tersebut.
+Maka dari itu proyek ini dibuat agar masyarakat tidak takut untuk berobat ke rumah sakit.
 
 ## Business Understanding
 
-Pada bagian ini, kamu perlu menjelaskan proses klarifikasi masalah.
-
-Bagian laporan ini mencakup:
+Coba bayangkan ada seorang laki-laki umur 30an yang sedang sakit. Dia mengeluh soal dadanya yang sering sesak setiap hari, dia terpikirkan untuk berobat ke rumah sakit. Akan tetapi mengingat bahwa biaya berobat rumah sakit cukup mahal, dia enggan mengunjungi rumah sakit. Sedangkan penyakitnya berlarut-larut semakin parah dan pada akhirnya akan ke rumah sakit dengan biaya perobatan yang lebih mahal sebelum penyakit tersebut parah. 
+Maka dari itu dari pihak rumah sakit, membuat sistem/proyek untuk mengatasi hal tersebut, yang mana mereka membuat sistem untuk memprediksi biaya pengobatan rumah sakit. Yang mana hal tersebut dapat menguntungkan kedua pihak, dimana dari pasien dapat langsung mengetahui biaya dari pengobatannya sehingga mau untuk datang ke rumah sakit, dan dari pihak rumah sakit dapat mengatasi penyakit pasien sejak dini (sebelum penyakit parah).
 
 ### Problem Statements
 
-Menjelaskan pernyataan masalah latar belakang:
-- Pernyataan Masalah 1
-- Pernyataan Masalah 2
-- Pernyataan Masalah n
+Berdasarkan hal yang telah dijelaskan sebelumnya maka ditemukanlah masalah sebagai berikut :
+- Dari berbagai fitur yang ada, apa yang paling mempengaruhi biaya pengobatan rumah sakit?
+- Bagaimana cara perhitungan biaya pengobatan?
 
 ### Goals
 
-Menjelaskan tujuan dari pernyataan masalah:
-- Jawaban pernyataan masalah 1
-- Jawaban pernyataan masalah 2
-- Jawaban pernyataan masalah n
+Untuk menjawab permasalahan diatas, maka dibuatlah predictive model dengan tujuan sebagai berikut :
+- Mengetahui fitur yang berkorelasi dengan biaya pengobatan
+- Membuat model machine learning yang dapat memprediksi harga pengobatan dengan fitur yang ada
 
-Semua poin di atas harus diuraikan dengan jelas. Anda bebas menuliskan berapa pernyataan masalah dan juga goals yang diinginkan.
-
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Menambahkan bagian “Solution Statement” yang menguraikan cara untuk meraih goals. Bagian ini dibuat dengan ketentuan sebagai berikut: 
-
-    ### Solution statements
-    - Mengajukan 2 atau lebih solution statement. Misalnya, menggunakan dua atau lebih algoritma untuk mencapai solusi yang diinginkan atau melakukan improvement pada baseline model dengan hyperparameter tuning.
-    - Solusi yang diberikan harus dapat terukur dengan metrik evaluasi.
+### Solution statements
+- Untuk mencapai tujuan tersebut, maka akan dibuat model machine learning dengan penggunaan algoritma KKN dan Random Forest
 
 ## Data Understanding
-Paragraf awal bagian ini menjelaskan informasi mengenai data yang Anda gunakan dalam proyek. Sertakan juga sumber atau tautan untuk mengunduh dataset. Contoh: [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Restaurant+%26+consumer+data).
+Data yang digunakan pada proyek ini merupakan data yang didapat dari Kaggle yang mana datanya berasal dari US yang dapat diakses melalui [Kaggle](https://www.kaggle.com/datasets/mirichoi0218/insurance)
 
 Selanjutnya uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:  
 
 ### Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
-- accepts : merupakan jenis pembayaran yang diterima pada restoran tertentu.
-- cuisine : merupakan jenis masakan yang disajikan pada restoran.
-- dst
+- age : Umur dari pasien
+- sex : Jenis kelamin pasien
+- bmi : Body Mass Index (berat badan normal/sehat)
+- children : Anak yang dicover(memiliki) asuransi
+- smoker : Perokok atau bukan
+- region : Asal negara bagian US
+- charges : Biaya berobat
+
+Dataset ini memiliki 1339 data, yang terbagi menjadi beberapa fitur, seperti fitur numerik : age, bmi, children, charges dan fitur non-numerik : sex, smoker, region.
+Dataset yang didapat termasuk bersih, sehingga dataset tidak terlalu banyak memerlukan proses data cleaning.
+Untuk visualisasi data, dapat menggunakan library seaborn dengan tambahan matplotlib
 
 **Rubrik/Kriteria Tambahan (Opsional)**:
 - Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data atau exploratory data analysis.
