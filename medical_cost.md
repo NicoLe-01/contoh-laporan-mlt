@@ -118,22 +118,24 @@ Pada Algoritma KNN<br>
 ![image](https://user-images.githubusercontent.com/64530694/188141324-12a75352-8ac6-4788-83bb-c77d3ab8e6be.png)
 <br>
 Kelebihan dari KNN adalah : 
-- Mudah diimplementasikan.
+- Mudah diimplementasikan
 
-Kekurangan daru KNN adalah :
+Kekurangan dari KNN adalah :
 - Kurang baik untuk data yang sangat besar
+
+
+Pada Algoritma Random Forest
 <br>
-<br>
-Pada Algoritma Random Forest<br>
 ![image](https://user-images.githubusercontent.com/64530694/188141419-f45a63fd-9dcb-4bf4-bb68-b37b8ea1907f.png)
 <br>
 Kelebihan Random Forest :
 - Dapat mengatasi data yang non linear
 
+
 Kekurangan Random Forest :
 - Training lebih lama dibanding dengan algoritma lainnya
-<br>
-<br>
+
+
 Jika dihitung nilai MSE dari kedua model diatas maka didapatkan nilai dengan :
 <br>
 ![image](https://user-images.githubusercontent.com/64530694/188176379-b2e18a02-4dfd-42b6-acc9-1a9b1f9c626f.png)
@@ -172,6 +174,4 @@ Dengan,
 MSE (model) : Mean Squared error dari prediksi
 MSE (baseline) : Mean Squared error dari prediksi rata-rata
 
-_Catatan:_
-- _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/), [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau sumber lain di internet. Semangat!_
-- Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.
+Jadi dapat disimpulkan bahwa model Random Forest Lebih efektif untuk dataset ini dengan Nilai yang berkorelasi tinggi adalah pasien perokok atau bukan.
