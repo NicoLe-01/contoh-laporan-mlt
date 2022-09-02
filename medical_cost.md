@@ -61,41 +61,116 @@ cek data type setiap fitur
 <br>
 ![image](https://user-images.githubusercontent.com/64530694/188114168-5930903c-2323-4a9a-b572-e94ab915ff0c.png)<br>
 Cek apakah terdapat nilai null
-
-
-
-
-
-
-
-
-
-
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan proses data preparation yang dilakukan
-- Menjelaskan alasan mengapa diperlukan tahapan data preparation tersebut.
+<br>
+<br>
+![image](https://user-images.githubusercontent.com/64530694/188132929-de6c83ce-fc5d-4aab-9d2f-3ac736e6b6c3.png)
+<br>
+Lihat pembagian data pada kolom jenis kelamin
+<br>
+<br>
+![image](https://user-images.githubusercontent.com/64530694/188133737-6cb0d02f-a517-408a-a24f-aa22cae37603.png)
+<br>
+Cek pembagian data pada kolom smoker.<br>
+Dapat dilihat pembagian data sekitar 80% pasien merupakan perokok
+<br>
+<br>
+![image](https://user-images.githubusercontent.com/64530694/188135169-2392a7d0-0c65-452e-8d26-22f0738e0641.png)
+<br>
+Cek pembagian pada kolom region
+<br>
+<br>
+Cek pesebaran data<br>
+![image](https://user-images.githubusercontent.com/64530694/188136036-6a7bab39-ffe7-49ca-8d33-4296d98f62af.png)
+![image](https://user-images.githubusercontent.com/64530694/188136778-e835e54e-abcb-4aa6-b6d9-cb0adc625cdc.png)
+![image](https://user-images.githubusercontent.com/64530694/188137120-c90ebe44-8277-48cf-9ca6-612a320cb2a2.png)
+<br>
+<br>
+Cek korelasi numerik antar data<br>
+![image](https://user-images.githubusercontent.com/64530694/188137505-18200ac5-845a-4784-8013-062538eafe91.png)
+<br>
+Dapat dilihat, nilai numerik memiliki korelasi yang cukup rendah antar fitur nya
+<br>
+<br>
+Encoding Fitur kategori<br>
+![image](https://user-images.githubusercontent.com/64530694/188140648-fa786315-69c9-4897-b664-a7d9ba71dd73.png)
+<br>
+<br>
+Cek kembali korelasi antar fitur<br>
+![image](https://user-images.githubusercontent.com/64530694/188175507-5049a3bd-3996-4d65-9742-4e0279ded9fe.png)<br>
+Dapat dilihat bahwa biaya berobat/charges berpengaruh cukup kuat dengan perokok atau tidaknya seorang pasien
+<br>
+<br>
+Pisahkan label<br>
+![image](https://user-images.githubusercontent.com/64530694/188140823-611d435e-a259-4f81-b37e-53e0093b77a1.png)
+<br>
+<br>
+Bagi data train dan data test<br>
+![image](https://user-images.githubusercontent.com/64530694/188140890-466b4c2d-eeaf-4375-92fc-92facf7b8dc2.png)
+<br>
+<br>
+Normalisasi data<br>
+![image](https://user-images.githubusercontent.com/64530694/188141015-8da38ce0-ab1c-4952-a500-d0619ec310e2.png)
+<br>
 
 ## Modeling
-Tahapan ini membahas mengenai model machine learning yang digunakan untuk menyelesaikan permasalahan. Anda perlu menjelaskan tahapan dan parameter yang digunakan pada proses pemodelan.
+Untuk dataset ini, disini menggunakan Algoritma KNN dan Random Forest.<br>
+Pada Algoritma KNN<br>
+![image](https://user-images.githubusercontent.com/64530694/188141324-12a75352-8ac6-4788-83bb-c77d3ab8e6be.png)
+<br>
+Kelebihan dari KNN adalah : 
+- Mudah diimplementasikan.
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan kelebihan dan kekurangan dari setiap algoritma yang digunakan.
-- Jika menggunakan satu algoritma pada solution statement, lakukan proses improvement terhadap model dengan hyperparameter tuning. **Jelaskan proses improvement yang dilakukan**.
-- Jika menggunakan dua atau lebih algoritma pada solution statement, maka pilih model terbaik sebagai solusi. **Jelaskan mengapa memilih model tersebut sebagai model terbaik**.
+Kekurangan daru KNN adalah :
+- Kurang baik untuk data yang sangat besar
+<br>
+<br>
+Pada Algoritma Random Forest<br>
+![image](https://user-images.githubusercontent.com/64530694/188141419-f45a63fd-9dcb-4bf4-bb68-b37b8ea1907f.png)
+<br>
+Kelebihan Random Forest :
+- Dapat mengatasi data yang non linear
+
+Kekurangan Random Forest :
+- Training lebih lama dibanding dengan algoritma lainnya
+<br>
+<br>
+Jika dihitung nilai MSE dari kedua model diatas maka didapatkan nilai dengan :
+<br>
+![image](https://user-images.githubusercontent.com/64530694/188176379-b2e18a02-4dfd-42b6-acc9-1a9b1f9c626f.png)
+<br>
+<br>
+Dapat dilihat nilai MSE pada model Random Forest lebih rendah dibanding dengan model KNN.
+
 
 ## Evaluation
-Pada bagian ini anda perlu menyebutkan metrik evaluasi yang digunakan. Lalu anda perlu menjelaskan hasil proyek berdasarkan metrik evaluasi yang digunakan.
-
-Sebagai contoh, Anda memiih kasus klasifikasi dan menggunakan metrik **akurasi, precision, recall, dan F1 score**. Jelaskan mengenai beberapa hal berikut:
-- Penjelasan mengenai metrik yang digunakan
-- Menjelaskan hasil proyek berdasarkan metrik evaluasi
-
-Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, problem statement, dan solusi yang diinginkan.
-
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
-
-**---Ini adalah bagian akhir laporan---**
+Metrik evaluasi yang digunakan adalah MSE dan juga R Square.
+Dengan nilai MSE:
+<br>
+![image](https://user-images.githubusercontent.com/64530694/188177669-8d81fc6c-9d1e-427b-8a02-df5fff541bb6.png)
+<br>
+<br>
+Dengan prediksi :
+<br>
+![image](https://user-images.githubusercontent.com/64530694/188177770-e8a6a65e-5270-4fc5-99e8-651d6122ab55.png)
+<br>
+<br>
+Nilai R Square :
+<br>
+![image](https://user-images.githubusercontent.com/64530694/188177996-f1ed812e-ac09-4951-a25c-9ac5ab616d2c.png)
+<br>
+<br>
+Cara kerja MSE:<br>
+![image](https://user-images.githubusercontent.com/64530694/188179389-f12984ac-1c07-4f05-8c1b-8340f3adf7d7.png)
+<br>
+MSE bekerja dengan mencari perbedaan kuadrat rata-rata antara nilai sebenarnya dengan nilai yang diprediksi oleh model.
+<br>
+<br>
+Cara kerja R Square:<br>
+![image](https://user-images.githubusercontent.com/64530694/188178413-91a81c7b-86e8-4432-b5de-a157677cfc0e.png)
+<br>
+Dengan, 
+MSE (model) : Mean Squared error dari prediksi
+MSE (baseline) : Mean Squared error dari prediksi rata-rata
 
 _Catatan:_
 - _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/), [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau sumber lain di internet. Semangat!_
