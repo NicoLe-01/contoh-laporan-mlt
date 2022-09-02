@@ -42,13 +42,34 @@ Selanjutnya uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:
 
 Dataset ini memiliki 1339 data, yang terbagi menjadi beberapa fitur, seperti fitur numerik : age, bmi, children, charges dan fitur non-numerik : sex, smoker, region.
 Dataset yang didapat termasuk bersih, sehingga dataset tidak terlalu banyak memerlukan proses data cleaning.
-Untuk visualisasi data, dapat menggunakan library seaborn dengan tambahan matplotlib
-
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data atau exploratory data analysis.
+Untuk visualisasi data, dapat menggunakan library seaborn dengan tambahan matplotlib. yang mana ditampilkan dengan diagram bar dan memakai plotscatter juga tabel korelasi yang akan dijelaskan bawah. 
 
 ## Data Preparation
 Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
+
+Pertama baca dataset.<br>
+![Import dataset](https://i.imgur.com/5f3Evuj.png)
+<br>
+<br>
+![cek input dan fitur](https://i.imgur.com/nvyQRJx.png)<br>
+Data memiliki 1339 input dengan 7 fitur
+<br>
+<br>
+![Cek Dataset](https://i.imgur.com/NP5GdLU.png)<br>
+cek data type setiap fitur
+<br>
+<br>
+![image](https://user-images.githubusercontent.com/64530694/188114168-5930903c-2323-4a9a-b572-e94ab915ff0c.png)<br>
+Cek apakah terdapat nilai null
+
+
+
+
+
+
+
+
+
 
 **Rubrik/Kriteria Tambahan (Opsional)**: 
 - Menjelaskan proses data preparation yang dilakukan
