@@ -47,13 +47,13 @@ Variabel-variabel pada Rating.csv adalah sebagai berikut:
 Untuk visualisasi data pada dataset ini penulis menggunakan library wordCloud, yang digunakan untuk mengetahui genre apa yang paling banyak pada dataset anime.
 
 ## Data Preparation
+### Content-Based Filtering
+
 Melihat kolom/fitur pada anime.csv
 
 
 Melihat apakah terdapat nilai null pada dataset
 
-
-hal ini dilakukan agar 
 
 
 Hapus nilai null
@@ -61,14 +61,48 @@ Hapus nilai null
 
 Melihat pesebaran genre yang ada pada dataset.
 
+Dapat dilihat genre paling mendominasi adalah Comedy, Action, dan Adventure
 
 pada bagian ini penulis membuat visualisasi untuk melihat pesebaran genre yang ada pada dataset, yaitu dengan menggunakan library wordCloud
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan proses data preparation yang dilakukan
-- Menjelaskan alasan mengapa diperlukan tahapan data preparation tersebut.
+### Collaborative Filtering
+Cek data
+
+Hilangkan nilai -1 (null)
+
+Ambil 1000 data rating
+
+Ambil nilai unique
+
+Bagi data
+
+
 
 ## Modeling
+### Content-Based Filtering
+Untuk metode ini, penulis menggunakan TfidfVectorizer dan cosine similarity
+
+
+Kelebihan :
+- Tidak memerlukan data riwayat penguna
+- Proses yang cepat
+- Implementasinya mudah
+
+Kekurangan :
+- Rekomendasi yang ditampikan cukup terbatas. Hanya menampilkan genre yang sesuai dengan pengguna
+- Rekomendasi yang ditampilkan tidak menggunakan rating. Hanya mencocokan genre yang diminta.
+
+### Collaborative Filtering
+Untuk metode ini, penulis menggunakan pendekatan deep learning 
+
+Kelebihan : 
+- Rekomendasi yang diberikan berdasarkan rating yang paling tinggi dan sesuai dengan genre.
+
+Kekurangan :
+- Proses traning yang cukup lama
+- Implementasi cukup sulit
+
+
 Tahapan ini membahas mengenai model sisten rekomendasi yang Anda buat untuk menyelesaikan permasalahan. Sajikan top-N recommendation sebagai output.
 
 **Rubrik/Kriteria Tambahan (Opsional)**: 
