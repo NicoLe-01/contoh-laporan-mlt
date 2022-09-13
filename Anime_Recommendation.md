@@ -49,7 +49,8 @@ Untuk visualisasi data pada dataset ini penulis menggunakan library wordCloud, y
 
 ## Data Preparation
 ### Content-Based Filtering
-Tahapan : 
+Tahapan : <br> 
+
 Melihat kolom/fitur pada anime.csv
 ```
 animes.head()
@@ -68,7 +69,6 @@ Melihat apakah terdapat nilai null pada dataset.
 ```
 animes.isnull().sum()
 ```
-
 | anime_id 	| 0   	|
 |----------	|-----	|
 | name     	| 0   	|
@@ -84,7 +84,6 @@ Hapus nilai null.
 ```
 animes.dropna(inplace=True)
 ```
-
 | anime_id 	| 0 	|
 |----------	|---	|
 | name     	| 0 	|
@@ -96,19 +95,34 @@ animes.dropna(inplace=True)
 
 Dapat dilihat dataset sudah bersih dari nilai null.
 
-Melihat pesebaran genre yang ada pada dataset.\
-![image](https://user-images.githubusercontent.com/64530694/189825520-3f3022e0-22e9-4f53-a5cf-8fdcd5488ded.png)\
+Melihat pesebaran genre yang ada pada dataset.
+```
+from collections import defaultdict
+all_genres = defaultdict(int)
+for genres in animes['genre']:
+    for genre in genres.split(','):
+        all_genres[genre.strip()] += 1
+
+def wordCloud(words):
+    wordCloud = WordCloud(width=1000, height=800, background_color='white').generate_from_frequencies(words)
+
+    plt.imshow(wordCloud, interpolation='bilinear')
+    plt.axis('off')
+    plt.show()
+wordCloud(all_genres)
+```
+![image](https://user-images.githubusercontent.com/64530694/189825520-3f3022e0-22e9-4f53-a5cf-8fdcd5488ded.png)
+
 Dapat dilihat pesebaran genre anime didominasi oleh genre Comedy, Action, dan Adventure.
 
 Pada bagian ini penulis membuat visualisasi untuk melihat pesebaran genre yang ada pada dataset, yaitu dengan menggunakan library wordCloud
 
 ### Collaborative Filtering
-Tahapan : 
+Tahapan :\
 Cek data rating
 ```
 ratings.head()
 ```
-
 |   	| user_id 	| anime_id 	| rating 	|
 |--:	|--------:	|---------:	|-------:	|
 | 0 	|       1 	|       20 	|     -1 	|
@@ -126,7 +140,6 @@ ratings = ratings.loc[~mask]
 ```
 
 Cek nilai lagi.
-
 |  user_id 	| 0.0 	|
 |---------:	|-----	|
 | anime_id 	| 0.0 	|
@@ -142,7 +155,6 @@ Ambil nilai unique user_id dan anime_id.
 userid_unique = ratings['user_id'].nunique()
 anime_unique = ratings['anime_id'].nunique()
 ```
-
 |  user unique : 	| 940  	|
 |---------------:	|------	|
 | anime unique : 	| 4510 	|
@@ -174,27 +186,12 @@ def anime_recommendation(nama_anime, similarity_data=cosine_sim_df, items=animes
 # similarity_data : matriks kesamaan anime
 # items : fitur kemiripan
 # k : banyak rekomendasi yang diinginkan
-
-  # ubah dataframe menjadi numpy
-  # ambil data menggunakan argpartition
-  index = similarity_data.loc[:, nama_anime].to_numpy().argpartition(
-      range(-1, -k, -1)
-  )
-  
-  # ambil similarity terbesar
-  closest = similarity_data.columns[index[-1:-(k+2):-1]]
-  
-  # hilangkan anime yang sama, dengan judul anime yang diminta
-  closest = closest.drop(nama_anime, errors='ignore')
-
-  return pd.DataFrame(closest).merge(items).head(k)
 ```
 
 Hasil Prediksi
 ```
 anime_recommendation('Sword Art Online', k=5)
 ```
-
 |   	|               name               	|                   genre                   	|
 |--:	|:--------------------------------:	|:-----------------------------------------:	|
 | 0 	| Sword Art Online II              	| Action, Adventure, Fantasy, Game, Romance 	|
@@ -202,7 +199,6 @@ anime_recommendation('Sword Art Online', k=5)
 | 2 	| Sword Art Online II: Debriefing  	| Action, Adventure, Fantasy, Game          	|
 | 3 	| Bakugan Battle Brawlers          	| Action, Fantasy, Game                     	|
 | 4 	| Monster Strike: Mermaid Rhapsody 	| Action, Fantasy, Game                     	|
-
 
 Kelebihan :
 - Tidak memerlukan data riwayat penguna
@@ -223,31 +219,6 @@ def RecommenderAnime(n_users, n_movies, n_dim):
 # n_user = banyaknya jumlah dimensi untuk layer user
 # n_moview = banyaknya jumlah dimensi untuk layer anime
 # n_dim = output dimension
-
-    # User
-    user = Input(shape=(1,))
-    U = Embedding(n_users, n_dim)(user)
-    U = Dropout(0.2)(U)
-    U = Flatten()(U)
-    
-    # Anime
-    movie = Input(shape=(1,))
-    M = Embedding(n_movies, n_dim)(movie)
-    M = Dropout(0.2)(M)
-    M = Flatten()(M)
-    
-    # Gabungkan disini
-    merged_vector = concatenate([U, M])
-    dense_1 = Dense(128, activation='relu')(merged_vector)
-    dropout = Dropout(0.3)(dense_1)
-    final = Dense(1)(dropout)
-    
-    model = Model(inputs=[user, movie], outputs=final)
-    
-    model.compile(optimizer=Adam(0.001),
-                  loss='mean_squared_error')
-    
-    return model
 ```
 
 Inisiasi model dengan nilai unique dari user_id dan anime. Lalu traning traning model denga model.fit
@@ -260,8 +231,6 @@ def buat_prediksi(user_id, anime_id, model):
 # user_id : id user yang ingin diprediksi
 # anime_id : id anime yang ingin diprediksi
 # model : model yang sudah di traning
-
-    return model.predict([np.array([user_id]), np.array([anime_id])])[0][0]
 ```
 
 Fungsi untuk menampilkan rekomendasi
@@ -272,38 +241,12 @@ def prediksi_teratas(user_id, model, k):
   Parameter model : input model yang telah di traning
   Parameter k : input berapa banyak prediksi yang akan tampilkan
   """
-
-
-  user_id = int(user_id) - 1    # ambil user id
-  user_ratings = ratings[ratings['user_id'] == user_id] # lihat anime apa saja yg telah di review oleh pengguna
-  anime_id_user_ratings = user_ratings.anime_id.values.tolist() # buatlist anime yang telah ditonton oleh pengguna
-  anime_viewed = animes.loc[animes['anime_id'].isin(anime_id_user_ratings)].sort_values(by='anime_id')  # cari anime berdasarkan anime_id
-  
-  genre_viewed = defaultdict(int)  # buat dictionary
-
-  for genres in anime_viewed['genre']:  # hitung genre yang muncul
-    for genre in genres.split(','):
-        genre_viewed[genre.strip()] += 1
-
-  genre_viewed_by_user = list(sorted(genre_viewed, key=genre_viewed.get, reverse=True)) # urutkan genre yang muncul dari yang paling banyak
-  top7_genre_by_user = genre_viewed_by_user[:7]  # ambil 7 genre tertinggi
-
-  print("7 genre yang banyak ditonton oleh pengguna : \n")
-  print(top7_genre_by_user, sep=", ")
-  print("=======================" * 5)
-  
-  rekomendasi = ratings[~ratings['anime_id'].isin(user_ratings['anime_id'])][['anime_id']].drop_duplicates() # hilangkan anime yg telah di review dan masukkan ke dataframe rekomendasi
-  rekomendasi['rating_predict'] = rekomendasi.apply(lambda x: buat_prediksi(user_id, x['anime_id'], model), axis=1) # prediksi semua baris data anime. yg hasilnya dimasukkan ke dataframe rekomendasi
-  rekomendasi_fix = rekomendasi.sort_values(by='rating_predict', ascending=False).merge(animes[['anime_id', 'name', 'type', 'members', 'genre']],
-                                                                                       on='anime_id').head(k) # urutkan dari rating 5 tertinggi 
-  return rekomendasi_fix.sort_values('rating_predict', ascending=False)[['name', 'type', 'rating_predict', 'genre']]
 ```
 
 Hasil prediksi
 7 genre yang banyak ditonton oleh pengguna : 
 
-'Comedy', 'Adventure', 'Sci-Fi', 'Action', 'Fantasy', 'Shounen', 'Drama'
-
+['Comedy', 'Adventure', 'Sci-Fi', 'Action', 'Fantasy', 'Shounen', 'Drama']
 |          name         	|  type 	| rating_predict 	|                       genre                       	|
 |:---------------------:	|:-----:	|:--------------:	|:-------------------------------------------------:	|
 | Little Nemo           	| Movie 	| 9.98           	| Adventure, Fantasy                                	|
@@ -330,7 +273,6 @@ A = Genre/nilai sebenarnya
 B = Genre/nilai prediksi
 
 Dengan prediksi :
-
 |   	|               name               	|                   genre                   	|
 |--:	|:--------------------------------:	|:-----------------------------------------:	|
 | 0 	| Sword Art Online II              	| Action, Adventure, Fantasy, Game, Romance 	|
@@ -339,20 +281,26 @@ Dengan prediksi :
 | 3 	| Bakugan Battle Brawlers          	| Action, Fantasy, Game                     	|
 | 4 	| Monster Strike: Mermaid Rhapsody 	| Action, Fantasy, Game                     	|
 
+Jaccard Similarity menghitung kesamaan antara dua set. 
+Jadi, misalnya terdapat set A {1, 2, 3} dan set B {2, 3, 4}. Maka jaccard similarity akan menghitung apakah ada kesamaan antara dua set diatas. Dapat dilihat terdapat 1 kesamaan nilai pada set, yaitu nilai 2. Maka perhitungannya adalah :\
+J = |{2}| / |{1, 2, 3, 4}| \
+= 1 / 4 \
+= 0.25\
+Maka nilai Jaccard Similarity untuk set A, B adalah 0.25
 
-Implementasi Jaccard similarity
-```
-def jaccard_set(list_genre, list_genre_prediksi):
-    intersection = len(list(set(list_genre).intersection(list_genre_prediksi)))
-    union = (len(list_genre) + len(list_genre_prediksi)) - intersection
-    return float(intersection) / union
-```
-
-Didapatkan score similarity sebesar 0.8, yang artinya sistem rekomendasi bekerja cukup baik.
+Untuk nilai Jaccard Similarity prediksi didapatkan melalui perhitungan genre anime dengan genre anime yang disarankan.\
+genre_anime = {'Action', 'Adventure', 'Fantasy', 'Game', 'Romance'}\
+genre_prediksi = {'Action', 'Adventure', 'Fantasy', 'Game', 'Romance'}\
+J[1] = |{'Action', 'Adventure', 'Fantasy', 'Game', 'Romance'}| / |{'Action', 'Adventure', 'Fantasy', 'Game', 'Romance'}|\
+= 5 / 5 \
+= 1 \
+Perhitungan akan dilakukan terus sampai prediksi ke-n lalu di rata-ratakan.
+Sehingga didapatkan score similarity sebesar 0.8 untuk prediksi anime "Sword Art Online", yang artinya sistem rekomendasi bekerja cukup baik.
 
 
 ### Collaborative Filtering
 Metrik evaluasi yang digunakan adalah menggunakan Mean Squared Error, yang formulanya :\
+<br>
 ![image](https://user-images.githubusercontent.com/64530694/189574922-e5cc96b1-30fe-4db7-b508-13aaf8c85c46.png)
 
 Dengan :
@@ -362,11 +310,20 @@ Dengan :
 
 Nilai MSE ini adalah Mean Squared Error, yang mana merupakan perbandingan nilai sebenarnya dengan nilai prediksi lalu dirata-ratakan. 
 
-Yang prediksi nya adalah :
+Dari hasil Traning model, model mendapatkan nilai MSE 0.89 pada training sedangkan pada validation mendapatkan nilai MSE 1.53.\
+<br>
+![image](https://user-images.githubusercontent.com/64530694/189904751-7c605f87-1bd9-4494-9fed-1b9d5974d8fb.png)\
+
+Artinya, model kurang baik bekerja pada data validation. Akan tetapi model masih dapat memberikan rekomendasi yang cukup relevean kepada pengguna.
+
+
+Hasil prediksi nya adalah :
+```
+prediksi_teratas(200, model, 5)
+```
 7 genre yang banyak ditonton oleh pengguna : 
 
-'Comedy', 'Adventure', 'Sci-Fi', 'Action', 'Fantasy', 'Shounen', 'Drama'
-
+['Comedy', 'Adventure', 'Sci-Fi', 'Action', 'Fantasy', 'Shounen', 'Drama']
 |          name         	|  type 	| rating_predict 	|                       genre                       	|
 |:---------------------:	|:-----:	|:--------------:	|:-------------------------------------------------:	|
 | Little Nemo           	| Movie 	| 9.98           	| Adventure, Fantasy                                	|
@@ -375,7 +332,38 @@ Yang prediksi nya adalah :
 | Zettai Karen Children 	| TV    	| 9.80           	| Action, Comedy, Shounen, Supernatural             	|
 | Tattoon Master        	| OVA   	| 9.78           	| Adventure, Comedy, Slice of Life, Supernatural    	|
 
-Model mendapatkan nilai MSE 0.89 pada trainig sedangkan pada validation mendapatkan nilai MSE 1.53. yang artinya model kurang baik bekerja pada data validation.
+
+```
+prediksi_teratas(34, model, 5)
+```
+
+7 genre yang banyak ditonton oleh pengguna : 
+
+'Action', 'Comedy', 'Adventure', 'Sci-Fi', 'Fantasy', 'Shounen', 'Romance'
+|   	|                      name                      	|  type 	| rating_predict 	|                  genre                  	|
+|--:	|:----------------------------------------------:	|:-----:	|:--------------:	|:---------------------------------------:	|
+| 0 	| PetoPeto-san                                   	| TV    	| 10.24          	| Comedy, Fantasy, Romance, School        	|
+| 1 	| Little Nemo                                    	| Movie 	| 10.11          	| Adventure, Fantasy                      	|
+| 2 	| Aria The Animation                             	| TV    	| 10.10          	| Fantasy, Sci-Fi, Shounen, Slice of Life 	|
+| 3 	| TO-Y                                           	| OVA   	| 10.10          	| Drama, Music, Shounen                   	|
+| 4 	| Wellber no Monogatari: Sisters of Wellber Zwei 	| TV    	| 9.99           	| Adventure, Fantasy, Historical, Romance 	|
+
+
+```
+prediksi_teratas(45, model, 5)
+```
+7 genre yang banyak ditonton oleh pengguna : 
+
+'Comedy', 'Adventure', 'Fantasy', 'Action', 'Shounen', 'Sci-Fi', 'Drama'
+|   	|          name         	| type 	| rating_predict 	|                    genre                   	|
+|:-:	|:---------------------:	|:----:	|:--------------:	|:------------------------------------------:	|
+| 0 	| Penguin Musume♥Heart  	| ONA  	| 9.88           	| Comedy, Ecchi, School, Slice of Life       	|
+| 1 	| PetoPeto-san          	| TV   	| 9.83           	| Comedy, Fantasy, Romance, School           	|
+| 2 	| The Urotsuki          	| OVA  	| 9.79           	| Adventure, Demons, Fantasy, Hentai, Horror 	|
+| 3 	| Batman: Gotham Knight 	| OVA  	| 9.61           	| Action, Adventure, Martial Arts            	|
+| 4 	| Prince of Tennis      	| TV   	| 9.49           	| Action, Comedy, School, Shounen, Sports    	|
+
+<br>
 
 
 ## Kesimpulan 
