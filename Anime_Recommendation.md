@@ -2,7 +2,8 @@
 
 ## Project Overview
 Proyek ini merupakan proyek Rekomendasi Anime. Latar belakang proyek ini adalah pengalaman penulis saat mencari anime yang sesuai dengan selera. Dimana penulis cukup kesulitan dalam mencari anime yang sesuai dengan genre yang disukai. Maka dari itu penulis memiliki ide untuk membuat sistem rekomendasi anime. Agar penulis atau orang lain dapat mencari anime yang sesuai dengan genre yang disukai. Dari sudut pandang penyedia anime/distributor anime juga memiliki manfaat seperti dapat meningkatkan jumlah pengunjung/click rate pada penyedia anime tersebut.
-Hal ini juga pernah diteliti oleh Zartesya, M. A., & Komalasari, D. (2021), dengan judul [Penerapan Collaborative Filtering, PCA dan K-Means dalam Pembangunan Sistem Rekomendasi Ongoing dan Upcoming Film Animasi Jepang](https://conference.upnvj.ac.id/index.php/senamika/article/view/1343) yang mana Zartesya menggunakan metode Collaborative Filtering, PCA dan K-Means proyek tersebut.
+Hal ini juga pernah diteliti oleh [Zartesya, M. A., & Komalasari, D. (2021)](https://conference.upnvj.ac.id/index.php/senamika/article/view/1343)[1], yang mana Zartesya menggunakan metode Collaborative Filtering, PCA dan K-Means proyek tersebut.
+[SA Pratama - 2019](https://repository.upnvj.ac.id/2016/1/AWAL.pdf)[2], juga meneliti tentang hal ini, SA Pratama menggunakan metode Decision Tree pada proyeknya.
 
 ## Business Understanding
 Seperi yang dijelaskan pada bagian Project Overview. Bayangkan terdapat seorang yang baru menonton suatu judul anime, lalu dia tertarik untuk menonton anime yang sejenis dengan anime yang ditonton sebelumnya. Lalu dia mencoba mencari aplikasi yang penyedia jasa streaming anime. Nah, dengan adanya sistem rekomendasi anime ini, pengguna baru tersebut dapat melihat anime yang populer atau pengguna dapat membuat akun, lalu membuat daftar anime yang ditonton. 
@@ -48,61 +49,88 @@ Untuk visualisasi data pada dataset ini penulis menggunakan library wordCloud, y
 
 ## Data Preparation
 ### Content-Based Filtering
+Tahapan : 
+- Melihat kolom/fitur pada anime.csv\
+- Melihat apakah terdapat nilai null pada dataset.
+- Hapus nilai null.
+- Melihat pesebaran genre yang ada pada dataset.
 
-Melihat kolom/fitur pada anime.csv\
-![image](https://user-images.githubusercontent.com/64530694/189573284-44c89594-a0fc-4f5a-9f77-6efde513b71a.png)
-<br>
-
-
-Melihat apakah terdapat nilai null pada dataset.\
-![image](https://user-images.githubusercontent.com/64530694/189573457-9dbf6494-a964-42eb-9f14-4d6fadec8e4d.png)
-<br>
-
-
-Hapus nilai null.\
-![image](https://user-images.githubusercontent.com/64530694/189573498-14737488-d87a-4391-aa66-2537af60e280.png)
-<br>
-
-Melihat pesebaran genre yang ada pada dataset.\
-![image](https://user-images.githubusercontent.com/64530694/189573609-ddbf225a-1a1f-4d4c-8d86-43a333b2f8cb.png)
-<br>
-
-Dapat dilihat genre paling mendominasi adalah Comedy, Action, dan Adventure
-
-pada bagian ini penulis membuat visualisasi untuk melihat pesebaran genre yang ada pada dataset, yaitu dengan menggunakan library wordCloud
+Pada bagian ini penulis membuat visualisasi untuk melihat pesebaran genre yang ada pada dataset, yaitu dengan menggunakan library wordCloud
 
 ### Collaborative Filtering
-Cek data.\
-![image](https://user-images.githubusercontent.com/64530694/189573782-b22a1a28-b2ed-4f83-9d75-b81a13ed8b44.png)
-<br>
-
-Hilangkan nilai -1 (null).\
-![image](https://user-images.githubusercontent.com/64530694/189573817-2611c0ef-c6eb-4b66-bfc9-748e8d4c9c0c.png)
-<br>
-
-Ambil 1000 data rating.\
-![image](https://user-images.githubusercontent.com/64530694/189573842-7c26c3ce-403b-4be5-8caf-1f7df740a119.png)
-<br>
-
-Ambil nilai unique.\
-![image](https://user-images.githubusercontent.com/64530694/189573939-89dd382b-6daa-4e66-ae77-e402214c67f9.png)
-<br>
-
-Bagi data.\
-![image](https://user-images.githubusercontent.com/64530694/189573998-32d312b0-7568-494d-8c38-fc072d098219.png)
-
+Tahapan : 
+- Cek data
+- Hilangkan nilai -1 (null).
+- Ambil 1000 data rating.
+- Ambil nilai unique.
+- Bagi data.
 
 
 ## Modeling
 ### Content-Based Filtering
 Untuk metode ini, penulis menggunakan TfidfVectorizer dan cosine similarity.\
-![image](https://user-images.githubusercontent.com/64530694/189574085-5fc70174-8f6a-40b8-86ce-527fd9c27ffe.png)
-<br>
-![image](https://user-images.githubusercontent.com/64530694/189574169-b7d98200-0746-4e98-88ee-6394691c2444.png)
-<br>
-Dengan fungsi prediksi :\
-![image](https://user-images.githubusercontent.com/64530694/189574248-59e40f7e-000f-4f32-a7a3-57a60e261b8a.png)
-<br>
+Pertama import library
+```
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+```
+```
+tf = TfidfVectorizer() # inisiasi TfidfVectorizer
+tf.fit(animes['genre']) # hitung idf
+tf.get_feature_names()
+```
+Lalu transform ke bentuk matrix
+```
+tfidf_matrix = tf.fit_transform(animes['genre'])
+```
+Ubah vektor tf-idf
+```
+tfidf_matrix.todense()
+```
+Hitung cosine similarity
+```
+cosine_sim = cosine_similarity(tfidf_matrix)
+```
+Buat dataframe dengan baris dan kolom nama anime
+```
+cosine_sim_df = pd.DataFrame(cosine_sim, index=animes['name'], columns=animes['name'])
+```
+Buat fungsi rekomendasi
+```
+def anime_recommendation(nama_anime, similarity_data=cosine_sim_df, items=animes[['name', 'genre']], k=5):
+
+# Parameter 
+# nama_anime :  nama anime yang ingin dicari
+# similarity_data : matriks kesamaan anime
+# items : fitur kemiripan
+# k : banyak rekomendasi yang diinginkan
+
+  # ubah dataframe menjadi numpy
+  # ambil data menggunakan argpartition
+  index = similarity_data.loc[:, nama_anime].to_numpy().argpartition(
+      range(-1, -k, -1)
+  )
+  
+  # ambil similarity terbesar
+  closest = similarity_data.columns[index[-1:-(k+2):-1]]
+  
+  # hilangkan anime yang sama, dengan judul anime yang diminta
+  closest = closest.drop(nama_anime, errors='ignore')
+
+  return pd.DataFrame(closest).merge(items).head(k)
+```
+
+Hasil Prediksi
+```
+anime_recommendation('Sword Art Online')
+```
+|               name               |                   genre                   |
+|:--------------------------------:|:-----------------------------------------:|
+| Sword Art Online II              | Action, Adventure, Fantasy, Game, Romance |
+| Sword Art Online: Extra Edition  | Action, Adventure, Fantasy, Game, Romance |
+| Sword Art Online II: Debriefing  | Action, Adventure, Fantasy, Game          |
+| Bakugan Battle Brawlers          | Action, Fantasy, Game                     |
+| Monster Strike: Mermaid Rhapsody | Action, Fantasy, Game                     |
 
 Kelebihan :
 - Tidak memerlukan data riwayat penguna
@@ -115,12 +143,139 @@ Kekurangan :
 
 ### Collaborative Filtering
 Untuk metode ini, penulis menggunakan pendekatan deep learning.\
-![image](https://user-images.githubusercontent.com/64530694/189574416-1215e14d-33cd-4c67-b625-20d310e2e1a6.png)
-<br>
-Dengan fungsi prediksi :\
-![image](https://user-images.githubusercontent.com/64530694/189574652-5c32f5f1-06a4-4233-baa5-8bfec555013d.png)
-<br>
 
+Import library
+```
+import tensorflow as tf
+from tensorflow.keras import Model
+from tensorflow.keras.layers import Input, Embedding, Reshape, Flatten, concatenate, Dense, Dropout
+from tensorflow.keras.optimizers import Adam
+from sklearn.model_selection import train_test_split
+```
+
+Buang kolom rating dan simpan ke variabel
+```
+X = ratings.drop(['rating'], axis=1)
+```
+
+Buat variabel untuk menyimpan label
+```
+y = ratings['rating'].astype(float)
+```
+
+Bagi data menjadi traning dan validation
+```
+X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=22)
+```
+
+Buat model
+```
+def RecommenderAnime(n_users, n_movies, n_dim):
+# Parameter 
+# n_user = banyaknya jumlah dimensi untuk layer user
+# n_moview = banyaknya jumlah dimensi untuk layer anime
+# n_dim = output dimension
+
+    # User
+    user = Input(shape=(1,))
+    U = Embedding(n_users, n_dim)(user)
+    U = Dropout(0.2)(U)
+    U = Flatten()(U)
+    
+    # Anime
+    movie = Input(shape=(1,))
+    M = Embedding(n_movies, n_dim)(movie)
+    M = Dropout(0.2)(M)
+    M = Flatten()(M)
+    
+    # Gabungkan disini
+    merged_vector = concatenate([U, M])
+    dense_1 = Dense(128, activation='relu')(merged_vector)
+    dropout = Dropout(0.3)(dense_1)
+    final = Dense(1)(dropout)
+    
+    model = Model(inputs=[user, movie], outputs=final)
+    
+    model.compile(optimizer=Adam(0.001),
+                  loss='mean_squared_error')
+    
+    return model
+```
+
+Inisiasi model
+```
+model = RecommenderAnime(userid_unique, anime_unique, 100)
+```
+
+Traning model
+```
+history = model.fit(x=[X_train['user_id'], X_train['anime_id']],
+                    y=y_train,
+                    batch_size=8,
+                    epochs=30,
+                    verbose=1,
+                    validation_data=([X_val['user_id'], X_val['anime_id']], y_val),
+                    callbacks=[my_callbacks]
+                    )
+```
+
+fungsi prediksi
+```
+def buat_prediksi(user_id, anime_id, model):
+# Parameter 
+# user_id : id user yang ingin diprediksi
+# anime_id : id anime yang ingin diprediksi
+# model : model yang sudah di traning
+
+    return model.predict([np.array([user_id]), np.array([anime_id])])[0][0]
+```
+
+Fungsi untuk menampilkan rekomendasi
+```
+def prediksi_teratas(user_id, model, k):
+  """
+  Parameter user_id : input user ke n dari data set
+  Parameter model : input model yang telah di traning
+  Parameter k : input berapa banyak prediksi yang akan tampilkan
+  """
+
+
+  user_id = int(user_id) - 1    # ambil user id
+  user_ratings = ratings[ratings['user_id'] == user_id] # lihat anime apa saja yg telah di review oleh pengguna
+  anime_id_user_ratings = user_ratings.anime_id.values.tolist() # buatlist anime yang telah ditonton oleh pengguna
+  anime_viewed = animes.loc[animes['anime_id'].isin(anime_id_user_ratings)].sort_values(by='anime_id')  # cari anime berdasarkan anime_id
+  
+  genre_viewed = defaultdict(int)  # buat dictionary
+
+  for genres in anime_viewed['genre']:  # hitung genre yang muncul
+    for genre in genres.split(','):
+        genre_viewed[genre.strip()] += 1
+
+  genre_viewed_by_user = list(sorted(genre_viewed, key=genre_viewed.get, reverse=True)) # urutkan genre yang muncul dari yang paling banyak
+  top7_genre_by_user = genre_viewed_by_user[:7]  # ambil 7 genre tertinggi
+
+  print("7 genre yang banyak ditonton oleh pengguna : \n")
+  print(top7_genre_by_user, sep=", ")
+  print("=======================" * 5)
+  
+  rekomendasi = ratings[~ratings['anime_id'].isin(user_ratings['anime_id'])][['anime_id']].drop_duplicates() # hilangkan anime yg telah di review dan masukkan ke dataframe rekomendasi
+  rekomendasi['rating_predict'] = rekomendasi.apply(lambda x: buat_prediksi(user_id, x['anime_id'], model), axis=1) # prediksi semua baris data anime. yg hasilnya dimasukkan ke dataframe rekomendasi
+  rekomendasi_fix = rekomendasi.sort_values(by='rating_predict', ascending=False).merge(animes[['anime_id', 'name', 'type', 'members', 'genre']],
+                                                                                       on='anime_id').head(k) # urutkan dari rating 5 tertinggi 
+  return rekomendasi_fix.sort_values('rating_predict', ascending=False)[['name', 'type', 'rating_predict', 'genre']]
+```
+
+Hasil prediksi
+7 genre yang banyak ditonton oleh pengguna :\
+'Comedy', 'Adventure', 'Sci-Fi', 'Action', 'Fantasy', 'Shounen', 'Drama'
+
+|                    name                   |  type | rating_predict |                       genre                       |
+|:-----------------------------------------:|:-----:|:--------------:|:-------------------------------------------------:|
+| Doraemon Movie 16: Nobita no Sousei Nikki | Movie | 9.713937       | Adventure, Comedy, Fantasy, Kids, Sci-Fi, Shounen |
+| Penguin Musume♥Heart                      | ONA   | 9.669694       | Comedy, Ecchi, School, Slice of Life              |
+| Little Nemo                               | Movie | 9.631376       | Adventure, Fantasy                                |
+| Batman: Gotham Knight                     | OVA   | 9.614861       | Action, Adventure, Martial Arts                   |
+| Medarot Damashii                          | TV    | 9.591266       | Action, Adventure, Sci-Fi                         |
 
 Kelebihan : 
 - Rekomendasi yang diberikan berdasarkan rating yang paling tinggi dan sesuai dengan genre.
@@ -131,16 +286,48 @@ Kekurangan :
 
 ## Evaluation
 ### Conten-Based Filterring
-Metrik evaluasi yang digunakan adalah menggunakan Precision dengan sedikit perubahan, yang formula nya :\
-![image](https://user-images.githubusercontent.com/64530694/189574773-7869252c-7871-477e-93e2-c0f5fb06cc67.png)
-<br>
+Metrik evaluasi yang digunakan adalah menggunakan Jaccard Similarity yang formula nya :\
+![image](https://user-images.githubusercontent.com/64530694/189814134-c64b5304-178b-448e-b92c-9e092e073a03.png)
+
+    
+Dengan :
+- A = Genre/nilai sebenarnya
+- B = Genre/nilai prediksi
 
 Dengan prediksi :\
-![image](https://user-images.githubusercontent.com/64530694/189574864-2a7640cd-5d95-4806-b4e5-676835e882c6.png)
-<br>
+|               name               |                   genre                   |
+|:--------------------------------:|:-----------------------------------------:|
+| Sword Art Online II              | Action, Adventure, Fantasy, Game, Romance |
+| Sword Art Online: Extra Edition  | Action, Adventure, Fantasy, Game, Romance |
+| Sword Art Online II: Debriefing  | Action, Adventure, Fantasy, Game          |
+| Bakugan Battle Brawlers          | Action, Fantasy, Game                     |
+| Monster Strike: Mermaid Rhapsody | Action, Fantasy, Game                     |
 
-jadi P   = (4 + 4 + (4 - 1) + 3 + 3) / 20 = 0.85
-jadi presisi nya adalah 85%
+```
+def jaccard_set(list_genre, list_genre_prediksi):
+    intersection = len(list(set(list_genre).intersection(list_genre_prediksi)))
+    union = (len(list_genre) + len(list_genre_prediksi)) - intersection
+    return float(intersection) / union
+```
+
+```
+def jaccard_value_total(genre_anime, genre_prediksi):
+  total_jaccard_value = 0
+  result = 0
+  for i in range(len(genre_prediksi)):
+    genre = genre_prediksi[i].split(',')
+    jaccard_value = jaccard_set(genre_anime, genre)
+    total_jaccard_value += jaccard_value
+    result = total_jaccard_value / len(genre_prediksi)
+  return result
+```
+
+```
+jaccard_value_total(genre_anime, all_genre_prediksi)
+> 0.8
+```
+
+Dapat dilihat score similarity sebesar 0.8, yang artinya sistem rekomendasi bekerja cukup baik.
 
 
 ### Collaborative Filtering
@@ -155,7 +342,6 @@ Dengan :
 
 Yang prediksi nya adalah :\
 ![image](https://user-images.githubusercontent.com/64530694/189575053-9edf84aa-cc3b-42b8-b323-12457300580e.png)
-<br>
 
 
 ## Kesimpulan 
@@ -163,3 +349,9 @@ Jadi kesimpulan yang didapat dari proyek ini adalah :
 - Data yang terpenting dalam membuat sistem rekomendasi anime adalah Genre dan Rating dari suatu anime.
 - Dengan membuat sistem rekomendasi menggukanan machine learning, baik dengan Content-Based Filtering atau Collaborative Filtering.
 - Kedua metode memiliki kelebihan dan kekurangan masing-masing. Seperti yang dijelaskan pada bagian Modelling, dengan pendekatan Content-Based Filtering bagus untuk pengguna baru yang belum memiliki riwayat menonton anime. Sedangkan Collaborative Filtering bagus untuk pengguna yang sudah memiliki riwayat menonton anime.
+
+
+## Referensi
+[1] Zartesya, M. A., & Komalasari, D. (2021). Penerapan Collaborative Filtering, PCA dan K-Means dalam Pembangunan Sistem Rekomendasi Ongoing dan Upcoming Film Animasi Jepang. Senamika, 2(1), 606-615.
+
+[2] Pratama, S. A. (2019). PERANCANGAN SISTEM REKOMENDASI ANIME MENGGUNAKAN METODE DECISION TREE PADA INDUSTRI KREATIF (Doctoral dissertation, Universitas Pembangunan Nasional Veteran Jakarta).
